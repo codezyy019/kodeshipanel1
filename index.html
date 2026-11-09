@@ -58,7 +58,23 @@ main{max-width:1100px;margin:0 auto;padding:16px}
 /* console */
 .term-wrap{background:#05080b;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 #term{height:clamp(260px,62dvh,680px);overflow:auto;padding:12px 14px;font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;-webkit-overflow-scrolling:touch}
-#term .cmd{color:var(--accent)}#term .res{color:var(--blue)}#term .bad{color:var(--red)}
+#term .cmd{color:var(--accent);font-weight:600}#term .res{color:var(--blue)}#term .bad{color:var(--red)}
+#term .ln{padding:1px 0}
+#term .t{color:#5c6b7e}
+#term .th{color:#7d8da1}
+#term .lv{font-weight:600}
+#term .INFO{color:#3ddc84}#term .WARN{color:#f5c542}#term .ERROR,#term .FATAL{color:#ff6b6b}#term .DEBUG{color:#8b7cf6}
+#term .m{color:#d5dde8}
+#term .m.warn{color:#f5d77a}
+#term .m.err{color:#ff8f8f}
+#term .m.chat{color:#e8eef5}
+#term .m.chat b{color:#4dd0e1;font-weight:600}
+#term .m.join{color:#5ee59a}
+#term .m.leave{color:#ff9f7a}
+#term .m.sys{color:#58a6ff}
+#term .m.cmdl{color:#c792ea}
+#term .m.trace{color:#a35a5a}
+#term .num{color:#f5c542}
 .cmdbar{display:flex;align-items:center;border-top:1px solid var(--line);background:#0a0e13}
 .cmdbar span{padding-left:14px;color:var(--accent);font:600 15px ui-monospace,monospace}
 .cmdbar input{border:none;background:none;border-radius:0;box-shadow:none!important;padding:14px 12px;font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -259,9 +275,35 @@ document.querySelectorAll('[data-sig]').forEach(b => b.onclick = async () => {
 /* ---------- console ---------- */
 let logText = '', local = [], timers = [];
 const term = $('#term');
+const NOISE = /RCON (Client|Listener)|Thread RCON Client/;
+const LINE = /^\[(\d\d:\d\d:\d\d)\]\s*\[([^\]]*?)\/(INFO|WARN|ERROR|FATAL|DEBUG)\]:?\s?(.*)$/;
+function fmtMsg(msg, lvl) {
+  let cls = 'm';
+  let html = esc(msg);
+  const chat = msg.match(/^(\[Not Secure\]\s*)?<([^>]+)>\s?(.*)$/);
+  if (chat) return `<span class="m chat">&lt;<b>${esc(chat[2])}</b>&gt; ${esc(chat[3])}</span>`;
+  if (/ (joined|left) the game$/.test(msg)) cls += / joined /.test(msg) ? ' join' : ' leave';
+  else if (/lost connection|disconnected|was kicked|Disconnecting/i.test(msg)) cls += ' leave';
+  else if (/^Done \(|Starting minecraft|Stopping|Saving|Preparing|Loading|Enabling|Disabling|Running delayed init|Time elapsed/i.test(msg)) cls += ' sys';
+  else if (/issued server command|\[Server\]/.test(msg)) cls += ' cmdl';
+  else if (lvl === 'WARN') cls += ' warn';
+  else if (lvl === 'ERROR' || lvl === 'FATAL') cls += ' err';
+  html = html.replace(/(?<![#&\w.])(\d+(?:\.\d+)?)(ms|s|%)?\b/g, '<span class="num">$1$2</span>');
+  return `<span class="${cls}">${html}</span>`;
+}
+function colorize(text) {
+  return text.split('\n').filter(l => l.trim() && !NOISE.test(l)).map(l => {
+    const m = l.match(LINE);
+    if (m) return `<div class="ln"><span class="t">[${m[1]}]</span> <span class="th">[${esc(m[2])}/</span><span class="lv ${m[3]}">${m[3]}</span><span class="th">]:</span> ${fmtMsg(m[4], m[3])}</div>`;
+    if (/^\s+at |^Caused by|Exception/.test(l)) return `<div class="ln"><span class="m trace">${esc(l)}</span></div>`;
+    return `<div class="ln"><span class="m">${esc(l)}</span></div>`;
+  }).join('');
+}
+let lastLog = null, logHtml = '';
 function render() {
   const stick = term.scrollHeight - term.scrollTop - term.clientHeight < 60;
-  term.innerHTML = esc(logText) + local.map(l => `<div class="${l.c}">${esc(l.t)}</div>`).join('');
+  if (logText !== lastLog) { logHtml = colorize(logText); lastLog = logText; }
+  term.innerHTML = logHtml + local.map(l => `<div class="ln ${l.c}">${esc(l.t)}</div>`).join('');
   if (stick) term.scrollTop = term.scrollHeight;
 }
 function addLine(t, c) { local.push({t, c}); if (local.length > 200) local.shift(); render(); }
@@ -269,7 +311,7 @@ async function loadLog() {
   try { logText = (await api('log')).log; render(); }
   catch (e) { if (!logText && !local.some(l => l.t === e.message)) addLine(e.message, 'bad'); }
 }
-function startTimers() { stopTimers(); timers = [setInterval(loadLog, 3000), setInterval(loadStatus, 15000)]; }
+function startTimers() { stopTimers(); timers = [setInterval(loadLog, 3000), setInterval(loadStatus, 30000)]; }
 function stopTimers() { timers.forEach(clearInterval); timers = []; }
 
 const hist = []; let hi = 0;
