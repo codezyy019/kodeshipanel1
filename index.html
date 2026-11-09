@@ -2,124 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
 <title>Kodeshi Control Panel</title>
 <style>
-:root{--bg:#0f1318;--panel:#171d25;--panel2:#1d2530;--line:#2a3441;--text:#e6edf3;--mut:#8b98a8;--accent:#3ddc84;--red:#ff5d5d;--yellow:#f5c542;--blue:#4da3ff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+:root{--bg:#0d1117;--panel:#151b23;--panel2:#1c2430;--line:#263040;--text:#e8eef5;--mut:#8896a8;--accent:#3ddc84;--red:#ff6b6b;--yellow:#f5c542;--blue:#58a6ff;--r:12px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100dvh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 button,input,textarea{font:inherit;color:inherit}
 .hide{display:none!important}
-button{background:var(--panel2);border:1px solid var(--line);padding:8px 14px;border-radius:8px;cursor:pointer}
-button:hover{border-color:var(--accent)}
+svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 14px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:.15s}
+button:hover{border-color:#3a4a60;background:#222c3a}
+button:active{transform:scale(.97)}
 button:disabled{opacity:.5;cursor:wait}
-button.primary{background:var(--accent);color:#06210f;border-color:var(--accent);font-weight:600}
-input,textarea{background:#0b0f14;border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
-input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#04200f;font-weight:600}
+button.primary:hover{filter:brightness(1.08)}
+input,textarea{width:100%;background:#0a0e13;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:16px}
+input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(61,220,132,.15)}
 
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px;width:100%;max-width:360px}
+/* login */
+#login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(900px 400px at 50% -10%,rgba(61,220,132,.12),transparent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px 24px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#1a9e5c);display:grid;place-items:center;color:#04200f;font-weight:800;font-size:22px;margin-bottom:14px}
 .card h1{margin:0 0 4px;font-size:22px}
-.card p{margin:0 0 20px;color:var(--mut)}
-.card label{display:block;margin:12px 0 6px;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-.err{color:var(--red);margin-top:12px;min-height:20px}
+.card p{margin:0 0 18px;color:var(--mut)}
+.card label{display:block;margin:14px 0 6px;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.card button{width:100%;margin-top:20px;min-height:46px}
+.err{color:var(--red);margin-top:12px;min-height:20px;font-size:14px}
 
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--mut)}
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:rgba(13,17,23,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;min-width:0}
+.brand .logo{width:32px;height:32px;font-size:16px;border-radius:9px;margin:0}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:99px;background:var(--panel);border:1px solid var(--line);font-size:12.5px;font-weight:500;color:var(--mut);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mut)}
 .dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
 .dot.off{background:var(--red)}
-.status{color:var(--mut);font-weight:400;font-size:13px}
-.power{display:flex;gap:8px;flex-wrap:wrap}
+.right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.power{display:flex;gap:8px}
+.power button{font-weight:600}
 .power .start{color:var(--accent)}.power .restart{color:var(--yellow)}.power .stop{color:var(--red)}
-nav{display:flex;gap:4px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line)}
-nav button{background:none;border:none;border-bottom:2px solid transparent;border-radius:0;padding:12px 16px;color:var(--mut)}
+.power .start:hover{border-color:var(--accent)}.power .restart:hover{border-color:var(--yellow)}.power .stop:hover{border-color:var(--red)}
+#logout{padding:0 12px}
+nav{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;gap:4px}
+nav button{flex:0 0 auto;background:none;border:none;border-bottom:2px solid transparent;border-radius:0;min-height:44px;padding:0 16px;color:var(--mut)}
+nav button:hover{background:none;color:var(--text)}
 nav button.active{color:var(--text);border-bottom-color:var(--accent)}
-main{padding:20px;max-width:1100px;margin:0 auto}
 
-#term{background:#05080b;border:1px solid var(--line);border-radius:10px 10px 0 0;height:60vh;min-height:280px;overflow:auto;padding:12px;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+main{max-width:1100px;margin:0 auto;padding:16px}
+
+/* console */
+.term-wrap{background:#05080b;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+#term{height:clamp(260px,62dvh,680px);overflow:auto;padding:12px 14px;font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;-webkit-overflow-scrolling:touch}
 #term .cmd{color:var(--accent)}#term .res{color:var(--blue)}#term .bad{color:var(--red)}
-.cmdbar{display:flex;border:1px solid var(--line);border-top:none;border-radius:0 0 10px 10px;background:#0b0f14}
-.cmdbar span{padding:10px 0 10px 12px;color:var(--accent);font-family:ui-monospace,monospace}
-.cmdbar input{border:none;background:none;border-radius:0}
-.hint{color:var(--mut);margin-top:10px;font-size:12px}
+.cmdbar{display:flex;align-items:center;border-top:1px solid var(--line);background:#0a0e13}
+.cmdbar span{padding-left:14px;color:var(--accent);font:600 15px ui-monospace,monospace}
+.cmdbar input{border:none;background:none;border-radius:0;box-shadow:none!important;padding:14px 12px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.cmdbar button{margin:6px;min-height:38px}
+.hint{color:var(--mut);margin-top:10px;font-size:12.5px}
 
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
-.crumbs{font-family:ui-monospace,monospace;color:var(--mut)}
-.crumbs a{color:var(--blue);cursor:pointer}
+/* files */
+.fbar{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.crumbs{display:flex;align-items:center;gap:6px;overflow-x:auto;white-space:nowrap;padding:8px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font:13px ui-monospace,Menlo,monospace;color:var(--mut);scrollbar-width:none}
+.crumbs::-webkit-scrollbar{display:none}
+.crumbs a{color:var(--blue);cursor:pointer;padding:4px 2px}
+.crumbs i{font-style:normal;opacity:.5}
 .tools{display:flex;gap:8px;flex-wrap:wrap}
-table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-td{padding:10px 12px;border-bottom:1px solid var(--line)}
-tr:last-child td{border-bottom:none}
-tr.row:hover{background:var(--panel2)}
-td.n{cursor:pointer;word-break:break-all}
-td.m{color:var(--mut);white-space:nowrap}
-td.a{text-align:right;white-space:nowrap}
-td.a button{padding:4px 8px;font-size:12px;margin-left:4px}
-@media(max-width:640px){td.m.hd{display:none}}
+.tools button{flex:1 1 auto}
+.flist{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.frow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.frow:last-child{border-bottom:none}
+.frow:hover{background:var(--panel2)}
+.ico{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);color:var(--mut);flex:none}
+.ico.dir{color:var(--yellow);background:rgba(245,197,66,.1)}
+.fmain{flex:1;min-width:0}
+.fname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fmeta{color:var(--mut);font-size:12px;margin-top:1px}
+.facts{display:flex;gap:6px;flex:none}
+.ib{min-height:36px;width:36px;padding:0;border-radius:9px}
+.ib.del:hover{border-color:var(--red);color:var(--red)}
+.empty{padding:28px;text-align:center;color:var(--mut)}
 
-#editor{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
-#editor .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;width:100%;max-width:900px;height:85vh;display:flex;flex-direction:column;padding:14px;gap:10px}
-#editor textarea{flex:1;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:none;white-space:pre}
-#editor .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:8px;z-index:20;max-width:90vw}
+/* editor */
+#editor{position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+#editor .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;width:100%;max-width:960px;height:88dvh;display:flex;flex-direction:column;padding:12px;gap:10px}
+#editor .eh{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#edName{font:13px ui-monospace,Menlo,monospace;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#editor .eh div{display:flex;gap:8px;flex:none}
+#edText{flex:1;font:13px/1.55 ui-monospace,Menlo,Consolas,monospace;resize:none;white-space:pre;tab-size:4}
+#toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#222c3a;border:1px solid var(--line);padding:11px 16px;border-radius:10px;z-index:30;max-width:92vw;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+
+/* mobile */
+@media(max-width:640px){
+  .top-in{padding:10px 12px}
+  .right{width:100%;flex-wrap:nowrap}
+  .power{flex:1}
+  .power button{flex:1;padding:0 6px;min-height:42px}
+  .power .lbl{display:none}
+  nav{padding:0}
+  nav button{flex:1}
+  main{padding:12px}
+  #term{font-size:12px;height:clamp(240px,58dvh,600px)}
+  #editor{padding:0}
+  #editor .box{height:100dvh;max-width:none;border-radius:0;border:none}
+  .fmeta .dt{display:none}
+}
+@media(min-width:900px){
+  .fbar{flex-direction:row;align-items:center;justify-content:space-between}
+  .crumbs{flex:1}
+  .tools button{flex:0 0 auto}
+}
 </style>
 </head>
 <body>
 
 <section id="login">
   <div class="card">
+    <div class="logo">K</div>
     <h1>Kodeshi Panel</h1>
     <p>Sign in to manage your server</p>
     <label for="u">Username</label>
-    <input id="u" autocomplete="username">
+    <input id="u" autocomplete="username" autocapitalize="none" spellcheck="false">
     <label for="p">Password</label>
     <input id="p" type="password" autocomplete="current-password">
-    <button class="primary" id="loginBtn" style="width:100%;margin-top:18px">Login</button>
+    <button class="primary" id="loginBtn">Login</button>
     <div class="err" id="loginErr"></div>
   </div>
 </section>
 
 <section id="app" class="hide">
-  <header>
-    <div class="brand"><span class="dot" id="dot"></span>Kodeshi Server <span class="status" id="status">checking…</span></div>
-    <div class="power">
-      <button class="start" data-sig="start">▶ Start</button>
-      <button class="restart" data-sig="restart">⟳ Restart</button>
-      <button class="stop" data-sig="stop">■ Stop</button>
-      <button id="logout">Logout</button>
+  <div class="top">
+    <div class="top-in">
+      <div class="brand"><div class="logo">K</div>Kodeshi <span class="pill"><span class="dot" id="dot"></span><span id="status">checking…</span></span></div>
+      <div class="right">
+        <div class="power">
+          <button class="start" data-sig="start"><svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg><span class="lbl">Start</span></button>
+          <button class="restart" data-sig="restart"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg><span class="lbl">Restart</span></button>
+          <button class="stop" data-sig="stop"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg><span class="lbl">Stop</span></button>
+        </div>
+        <button id="logout" title="Logout"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+      </div>
     </div>
-  </header>
-  <nav>
-    <button class="active" data-tab="console">Console</button>
-    <button data-tab="files">Files</button>
-  </nav>
+    <nav>
+      <button class="active" data-tab="console">Console</button>
+      <button data-tab="files">Files</button>
+    </nav>
+  </div>
+
   <main>
     <div id="tab-console">
-      <div id="term"></div>
-      <div class="cmdbar"><span>&gt;</span><input id="cmd" placeholder="Type a command and press Enter" autocomplete="off" spellcheck="false"></div>
-      <div class="hint">Commands run through RCON. /tp and /give are blocked.</div>
-    </div>
-    <div id="tab-files" class="hide">
-      <div class="bar">
-        <div class="crumbs" id="crumbs"></div>
-        <div class="tools">
-          <button id="newFile">+ File</button>
-          <button id="newDir">+ Folder</button>
-          <button id="uploadBtn">Upload</button>
-          <input type="file" id="uploadIn" class="hide">
-          <button id="refresh">Refresh</button>
+      <div class="term-wrap">
+        <div id="term"></div>
+        <div class="cmdbar">
+          <span>&gt;</span>
+          <input id="cmd" placeholder="Type a command" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="send">
+          <button class="primary" id="sendBtn">Send</button>
         </div>
       </div>
-      <table><tbody id="rows"></tbody></table>
+      <div class="hint">Commands run through RCON. /tp and /give are blocked.</div>
+    </div>
+
+    <div id="tab-files" class="hide">
+      <div class="fbar">
+        <div class="crumbs" id="crumbs"></div>
+        <div class="tools">
+          <button id="newFile"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 12v6M9 15h6"/></svg>File</button>
+          <button id="newDir"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v5M9.5 13.5h5"/></svg>Folder</button>
+          <button id="uploadBtn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>Upload</button>
+          <button id="refresh"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+          <input type="file" id="uploadIn" class="hide">
+        </div>
+      </div>
+      <div class="flist" id="rows"></div>
     </div>
   </main>
 </section>
 
 <div id="editor" class="hide">
   <div class="box">
-    <div class="top"><strong id="edName"></strong><div><button class="primary" id="edSave">Save</button> <button id="edClose">Close</button></div></div>
-    <textarea id="edText" spellcheck="false"></textarea>
+    <div class="eh"><span id="edName"></span><div><button class="primary" id="edSave">Save</button><button id="edClose">Close</button></div></div>
+    <textarea id="edText" spellcheck="false" autocapitalize="none" autocorrect="off"></textarea>
   </div>
 </div>
 <div id="toast" class="hide"></div>
@@ -127,6 +193,14 @@ td.a button{padding:4px 8px;font-size:12px;margin-left:4px}
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const I = {
+  dir: '<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  file: '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
+  up: '<svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>',
+  dl: '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>',
+  ren: '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  del: '<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>'
+};
 
 async function api(action, data = {}) {
   const r = await fetch('api.php', {
@@ -134,7 +208,7 @@ async function api(action, data = {}) {
     headers: {'Content-Type': 'application/json', 'X-Requested-With': 'panel'},
     body: JSON.stringify({action, ...data})
   });
-  let j; try { j = await r.json(); } catch { throw new Error('Server error (is api.php running?)'); }
+  let j; try { j = await r.json(); } catch { throw new Error('Server error (is the backend running?)'); }
   if (r.status === 401 && action !== 'login') showLogin();
   if (!j.ok) throw new Error(j.error || 'Request failed');
   return j;
@@ -169,14 +243,15 @@ async function loadStatus() {
   try {
     const j = await api('status');
     $('#dot').className = 'dot ' + (j.online ? 'on' : 'off');
-    $('#status').textContent = j.online ? j.info.split(':')[0].replace(/^There are /, '') || 'Online' : 'Offline';
-  } catch { $('#dot').className = 'dot'; $('#status').textContent = 'unknown'; }
+    const m = j.online && j.info.match(/(\d+)\D+(\d+)/);
+    $('#status').textContent = j.online ? (m ? `Online · ${m[1]}/${m[2]}` : 'Online') : 'Offline';
+  } catch { $('#dot').className = 'dot'; $('#status').textContent = 'Unknown'; }
 }
 document.querySelectorAll('[data-sig]').forEach(b => b.onclick = async () => {
   const sig = b.dataset.sig;
   if (sig !== 'start' && !confirm(`${sig === 'stop' ? 'Stop' : 'Restart'} the server?`)) return;
   b.disabled = true;
-  try { const j = await api('power', {signal: sig}); toast(j.message); addLine(`[panel] ${j.message}`, 'res'); setTimeout(loadStatus, 4000); }
+  try { const j = await api('power', {signal: sig}); toast(j.message); addLine('[panel] ' + j.message, 'res'); setTimeout(loadStatus, 4000); }
   catch (e) { toast(e.message); addLine(e.message, 'bad'); }
   b.disabled = false;
 });
@@ -185,65 +260,76 @@ document.querySelectorAll('[data-sig]').forEach(b => b.onclick = async () => {
 let logText = '', local = [], timers = [];
 const term = $('#term');
 function render() {
-  const stick = term.scrollHeight - term.scrollTop - term.clientHeight < 40;
+  const stick = term.scrollHeight - term.scrollTop - term.clientHeight < 60;
   term.innerHTML = esc(logText) + local.map(l => `<div class="${l.c}">${esc(l.t)}</div>`).join('');
   if (stick) term.scrollTop = term.scrollHeight;
 }
 function addLine(t, c) { local.push({t, c}); if (local.length > 200) local.shift(); render(); }
 async function loadLog() {
   try { logText = (await api('log')).log; render(); }
-  catch (e) { if (!logText) { logText = ''; addLine(e.message, 'bad'); } }
+  catch (e) { if (!logText && !local.some(l => l.t === e.message)) addLine(e.message, 'bad'); }
 }
 function startTimers() { stopTimers(); timers = [setInterval(loadLog, 3000), setInterval(loadStatus, 15000)]; }
 function stopTimers() { timers.forEach(clearInterval); timers = []; }
 
 const hist = []; let hi = 0;
-$('#cmd').onkeydown = async e => {
+async function sendCmd() {
+  const inp = $('#cmd'), c = inp.value.trim(); if (!c) return;
+  hist.push(c); hi = hist.length; inp.value = '';
+  addLine('> ' + c, 'cmd');
+  try { const j = await api('console', {command: c}); addLine(j.output || '(no output)', 'res'); }
+  catch (er) { addLine(er.message, 'bad'); }
+}
+$('#sendBtn').onclick = sendCmd;
+$('#cmd').onkeydown = e => {
   const inp = e.target;
   if (e.key === 'ArrowUp') { if (hi > 0) inp.value = hist[--hi]; e.preventDefault(); }
   else if (e.key === 'ArrowDown') { inp.value = hist[++hi] || ''; if (hi > hist.length) hi = hist.length; e.preventDefault(); }
-  else if (e.key === 'Enter') {
-    const c = inp.value.trim(); if (!c) return;
-    hist.push(c); hi = hist.length; inp.value = '';
-    addLine('> ' + c, 'cmd');
-    try { const j = await api('console', {command: c}); addLine(j.output || '(no output)', 'res'); }
-    catch (er) { addLine(er.message, 'bad'); }
-  }
+  else if (e.key === 'Enter') sendCmd();
 };
 
 /* ---------- files ---------- */
-let cwd = '/', editing = '';
+let cwd = '/', editing = '', items = [];
 const join = (a, b) => (a === '/' ? '' : a) + '/' + b;
 const fmtSize = n => n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : (n / 1048576).toFixed(1) + ' MB';
-const fmtDate = t => t ? new Date(t * 1000).toLocaleString([], {dateStyle: 'short', timeStyle: 'short'}) : '';
+const fmtDate = t => t ? new Date(t * 1000).toLocaleString([], {dateStyle: 'medium', timeStyle: 'short'}) : '';
 
 async function loadFiles(p) {
+  $('#rows').innerHTML = '<div class="empty">Loading…</div>';
   try {
-    const j = await api('list', {path: p}); cwd = j.path;
+    const j = await api('list', {path: p}); cwd = j.path; items = j.items;
     const parts = cwd.split('/').filter(Boolean); let acc = '';
-    $('#crumbs').innerHTML = '<a data-p="/">root</a>' + parts.map(s => { acc += '/' + s; return ` / <a data-p="${esc(acc)}">${esc(s)}</a>`; }).join('');
-    $('#crumbs').querySelectorAll('a').forEach(a => a.onclick = () => loadFiles(a.dataset.p));
-    const up = cwd !== '/' ? `<tr class="row"><td class="n" data-up="1">📁 ..</td><td></td><td></td><td></td></tr>` : '';
-    $('#rows').innerHTML = up + j.items.map((f, i) => `<tr class="row"><td class="n" data-i="${i}">${f.dir ? '📁' : '📄'} ${esc(f.name)}</td><td class="m">${f.dir ? '' : fmtSize(f.size)}</td><td class="m hd">${fmtDate(f.mtime)}</td><td class="a">${f.dir ? '' : `<button data-dl="${i}">⬇</button>`}<button data-rn="${i}">Rename</button><button data-rm="${i}">Delete</button></td></tr>`).join('') || '<tr><td>Empty folder</td></tr>';
-    const items = j.items;
-    $('#rows').onclick = async e => {
-      const t = e.target, d = t.dataset;
-      if (d.up !== undefined || t.closest('[data-up]')) return loadFiles(cwd.replace(/\/[^/]*$/, '') || '/');
-      const idx = d.i ?? d.dl ?? d.rn ?? d.rm; if (idx === undefined) return;
-      const f = items[idx], path = join(cwd, f.name);
-      if (d.i !== undefined) return f.dir ? loadFiles(path) : openEditor(path);
-      if (d.dl !== undefined) return location.href = 'api.php?action=download&path=' + encodeURIComponent(path);
-      if (d.rn !== undefined) {
-        const n = prompt('New name', f.name); if (!n || n === f.name) return;
-        try { await api('rename', {from: path, to: join(cwd, n)}); loadFiles(cwd); } catch (er) { toast(er.message); }
-      }
-      if (d.rm !== undefined) {
-        if (!confirm(`Delete ${f.name}?`)) return;
-        try { await api('delete', {path}); loadFiles(cwd); } catch (er) { toast(er.message); }
-      }
-    };
-  } catch (e) { toast(e.message); }
+    $('#crumbs').innerHTML = '<a data-p="/">root</a>' + parts.map(s => { acc += '/' + s; return `<i>/</i><a data-p="${esc(acc)}">${esc(s)}</a>`; }).join('');
+    const up = cwd !== '/' ? `<div class="frow" data-up="1"><span class="ico">${I.up}</span><div class="fmain"><div class="fname">Parent folder</div></div></div>` : '';
+    $('#rows').innerHTML = up + (items.map((f, i) => `
+      <div class="frow" data-i="${i}">
+        <span class="ico ${f.dir ? 'dir' : ''}">${f.dir ? I.dir : I.file}</span>
+        <div class="fmain"><div class="fname">${esc(f.name)}</div><div class="fmeta">${f.dir ? 'Folder' : fmtSize(f.size)}<span class="dt">${f.mtime ? ' · ' + fmtDate(f.mtime) : ''}</span></div></div>
+        <div class="facts">
+          ${f.dir ? '' : `<button class="ib" data-act="dl" title="Download">${I.dl}</button>`}
+          <button class="ib" data-act="rn" title="Rename">${I.ren}</button>
+          <button class="ib del" data-act="rm" title="Delete">${I.del}</button>
+        </div>
+      </div>`).join('') || (up ? '' : '<div class="empty">Empty folder</div>'));
+  } catch (e) { $('#rows').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
 }
+$('#crumbs').onclick = e => { const a = e.target.closest('a'); if (a) loadFiles(a.dataset.p); };
+$('#rows').onclick = async e => {
+  if (e.target.closest('[data-up]')) return loadFiles(cwd.replace(/\/[^/]*$/, '') || '/');
+  const row = e.target.closest('[data-i]'); if (!row) return;
+  const f = items[row.dataset.i], path = join(cwd, f.name);
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (!act) return f.dir ? loadFiles(path) : openEditor(path);
+  if (act === 'dl') location.href = 'api.php?action=download&path=' + encodeURIComponent(path);
+  if (act === 'rn') {
+    const n = prompt('New name', f.name); if (!n || n === f.name) return;
+    try { await api('rename', {from: path, to: join(cwd, n)}); loadFiles(cwd); } catch (er) { toast(er.message); }
+  }
+  if (act === 'rm') {
+    if (!confirm(`Delete ${f.name}${f.dir ? ' and everything inside it' : ''}?`)) return;
+    try { await api('delete', {path}); loadFiles(cwd); } catch (er) { toast(er.message); }
+  }
+};
 $('#refresh').onclick = () => loadFiles(cwd);
 $('#newDir').onclick = async () => {
   const n = prompt('Folder name'); if (!n) return;
@@ -254,6 +340,7 @@ $('#uploadBtn').onclick = () => $('#uploadIn').click();
 $('#uploadIn').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
   const fd = new FormData(); fd.append('action', 'upload'); fd.append('path', cwd); fd.append('file', f);
+  toast('Uploading…');
   try {
     const r = await fetch('api.php', {method: 'POST', credentials: 'same-origin', headers: {'X-Requested-With': 'panel'}, body: fd});
     const j = await r.json(); if (!j.ok) throw new Error(j.error);
@@ -273,6 +360,11 @@ $('#edSave').onclick = async () => {
   try { await api('write', {path: editing, content: $('#edText').value}); toast('Saved'); loadFiles(cwd); }
   catch (e) { toast(e.message); }
 };
+$('#edText').onkeydown = e => {
+  if (e.key === 'Tab') { e.preventDefault(); const t = e.target, s = t.selectionStart; t.setRangeText('    ', s, t.selectionEnd, 'end'); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); $('#edSave').click(); }
+};
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#editor').classList.add('hide'); });
 
 /* ---------- init ---------- */
 api('me').then(j => j.auth ? showApp() : null).catch(() => {});
